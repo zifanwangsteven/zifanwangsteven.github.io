@@ -12,7 +12,9 @@ The basic idea is: you have some sort of an estimator for a value you are intere
 ### The Setup of a Test
 #### Hypotheses
 You draw $n$ samples $\mathbf{X} = (X_1, X_2, ..., X_n)$ i.i.d $P_{\theta}$ from a model parametrized $\theta$. Where the parameter value $\theta$ is unknown but should be in some known range $\Omega$. We consider the problem:
-$$H_0: \theta \isin \Omega_0 \quad \text{vesus} \quad H_a: \theta \isin \Omega_a$$
+$$
+H_0: \theta \isin \Omega_0 \quad \text{vesus} \quad H_a: \theta \isin \Omega_a
+$$
 where we have $\Omega_1 \cup \Omega_a = \Omega$ and $\Omega_1 \cap \Omega_a = \emptyset$. We typically call $H_0$ the **null hypothesis** and $H_1$ the **alternative hypothesis**. 
 #### Testing and Test Statistic
 Let $\mathbf{X}$ be a sample of size $n$ drawn from a distribution parametrized $\theta$, then a test statistic is a function of the sample only: $T = \varphi(\mathbf{X})$. Let $S$ denote all the n-dimensional distributions of $\mathbf{X}$, we can then partition the space into 2:
@@ -21,7 +23,9 @@ Let $\mathbf{X}$ be a sample of size $n$ drawn from a distribution parametrized 
 * $S_0$: otherwise, fail to reject $H_0$  
 
 We can then formalize a test $\delta$ as: reject $H_0$ if $T \isin R$ where $R$ is called the rejection region. Then we can also formalize the critical region $S_1$ as:
-$$S_1 =\{\mathbf{X} \ | \ \varphi(\mathbf{X})\isin R\}$$
+$$
+S_1 =\{\mathbf{X} \ | \ \varphi(\mathbf{X})\isin R\}
+$$
 #### Testing Errors
 Associated with the testing procedure $\delta$ are 2 types of errors:
 * Type I error: rejecting $H_0$ when $H_0$ is True
@@ -34,4 +38,3 @@ That is, for any given parameter value $\theta$, what is the probability of the 
 * $P(\text{Type II Error}) = 1 - \pi(\theta|\delta), \ \theta \isin \Omega_1$
 
 Therefore, for a test to be considered to be good, its power function should have the following properties. **Low** values for $\pi(\theta|\delta)$ when $\theta \isin \Omega_0$ and **high** values when $\theta \isin \Omega_1$. If the null hypothesis is a simple hypothesis, the ideal power function should just be 1 - delta function.
- 
