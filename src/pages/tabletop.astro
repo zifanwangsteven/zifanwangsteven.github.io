@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import MapLibre from "@components/MapLibre.astro";
+---
+
+<BaseLayout title="Table Top" sideBarActiveItemID="tabletop">
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Table Top</div>
+  </div>
+  <div class="mb-10 text-justify">
+    A highly opinionated listing of restaurants and cafés I've dined with in New York City. 
+  </div>
+  <MapLibre
+    container="maplibremap"
+    latitude="40.74708936598859"
+    longitude="-73.9454124504279"
+    zoom="15"
+    interactive="true"
+    mapstyle="https://api.maptiler.com/maps/dataviz/style.json?key=LiSxlsGbhOcKadmHWvMU"
+    containerstyle="width: 50vw; height: 30vw"
+/>
+</BaseLayout>
