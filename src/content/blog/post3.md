@@ -39,4 +39,53 @@ V &= \begin{bmatrix}\sigma^2 & 0 \\ 0 & \sigma^4\end{bmatrix} \\
 J_g(\mu, \sigma^2) &= \begin{bmatrix}\frac{1}{\sigma} & -\frac{\mu}{2\sigma^3}\end{bmatrix} \\ \sqrt{n}(\hat{\text{SR}} - \text{SR})&\xrightarrow{d} N(0, 1+\frac{\mu^2}{2\sigma^2}) \sim N(0, 1+\frac{1}{2}\text{SR}^2)
 \end{split} \\
 $$
-Therefore we can conclude the asymptotic standard error of the Sharpe Ratio estimator $SE(\hat{\text{SR}}) = \sqrt{\frac{1 + \text{SR}^2/2}{n}}$.
+Therefore we can conclude the asymptotic standard error of the Sharpe Ratio estimator $SE(\hat{\text{SR}}) = \sqrt{\frac{1 + \text{SR}^2/2}{n}}$. This yields a somewhat intuitive but often overlooked result, the higher the estimated Sharpe Ratio of a particular strategy, the larger the estimation error.
+### Time Aggregation
+It's easy to mistake the Sharpe Ratio as unitless, but it is really dependent on the 2 statistics that make up the value: mean and volatility and their scaling properties w.r.t. to time.
+
+For mean, the value scales linearly w.r.t. Suppose we have 2 means $\mu_1,  \mu_2$ for the same distribution corresponding to 2 different time intervals $t_1, t_2$ and we know that $t_1 = nt_2$, then we have
+$$
+\mu_1 = n\mu_2
+$$
+For iid series, the same identity also holds for variance, which would imply a square root scale for volatility:
+$$
+\begin{split}
+\sigma_1^2 = n\sigma_2^2 \\
+\sigma_1 = \sqrt{n}\sigma_2
+\end{split}
+$$
+Taking the ratio of the two, we get
+$$
+\text{SR}_1 = \sqrt{n}\text{SR}_2
+$$
+A concrete example would be conversion from a **daily** Sharpe Ratio to an **annualized** Sharpe ratio, where the scaling factor would be $\sqrt{251}$. (In U.S., stock markets are open 251 days a year as of 2024)
+### Application I: Loss Probabilities
+Recall Cantelli's Inequality:
+$$
+P(X < \mu-\lambda) \leq \frac{\sigma^2}{\sigma^2 + \lambda^2}
+$$
+Let $X$ be the annualized return of a strategy and $\text{SR}$ be the annualized Sharpe Ratio. We want to find out the probability of losses in multiples of the standard deviation $L\sigma$ where $L$ is a scaling factor. We can then get:
+$$
+\begin{split}
+P(X<-L\sigma) &= \frac{\sigma^2}{\sigma^2 + (L\sigma+\mu)^2} \\
+&=\frac{1}{1+(L+\text{SR})^2}
+\end{split}
+$$
+This holds for any distribution of returns. For the same level of loss, the higher the Sharpe Ratio, the lower the probability.
+### Application II: Optimal Sharpe Allocation
+Suppose we have an investible universte of $n$ assets / factors whose returns are a random vector $\mathbf{r} \isin \mathbb{R}^{n}$, and covariance matrix $\Omega_r \isin \mathbb{R}^{n \times n}$. We want to find an allocation $\mathbf{w} \isin \mathbb{R}^n$ that optimizes the portfolio variance subject a certain level of exposure to each asset / factor. Formally,
+$$
+\begin{split}
+\min_{\mathbf{w}} \mathbf{w}^T\Omega_r\mathbf{w}\\
+\text{s.t.} \quad \mathbf{b}^T\mathbf{w} = 1
+\end{split}
+$$
+We can formulate this as an unconstraint optimization problem using the Lagrangian
+$$
+L(\mathbf{w}, \lambda) = \mathbf{w}^T\Omega_r\mathbf{w}-\lambda(1-\mathbf{b}^T\mathbf{w})
+$$
+Solving for the stationary points, we get 
+$$
+\mathbf{w}^* = \frac{\Omega_r^{-1}\mathbf{b}}{\mathbf{b}^T\Omega_r^{-1}\mathbf{b}}
+$$
+To get the optimal 
