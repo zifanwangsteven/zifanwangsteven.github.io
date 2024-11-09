@@ -43,6 +43,16 @@ const { latitude, longitude, zoom, mapstyle, container, interactive, containerst
         zoom: this.dataset.zoom,
         style: this.dataset.mapstyle
       })
+      var trainStationIcon = document.createElement('div');
+      trainStationIcon.style.width = '38px';
+      trainStationIcon.style.height = '55px';
+      // Explicitly set scaleFactor=2 in the call 
+      // and backgroundSize=contain to get better 
+      // Marker Icon quality with MapLibre GL
+      trainStationIcon.style.backgroundSize = "contain";
+      trainStationIcon.style.backgroundImage = "url(https://api.geoapify.com/v1/icon/?type=awesome&scaleFactor=2&color=%23e68d6f&size=large&icon=train&iconSize=large&apiKey=6dc7fb95a3b246cfa0f3bcef5ce9ed9a)";
+      trainStationIcon.style.cursor = "pointer";
+      var marker = new maplibregl.Marker().setLngLat([40.74708936598859, -73.9454124504279]).addTo(map);
     }
   }
 
