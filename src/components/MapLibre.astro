@@ -1,4 +1,8 @@
 ---
+import type { CollectionEntry } from "astro:content";
+import ReviewLayout from "../layouts/ReviewLayout.astro";
+import { cuisineEmojis } from "../lib/cuisineEmojis";
+
 export interface Props {
   latitude: number
   longitude: number
@@ -9,52 +13,114 @@ export interface Props {
   /** If `false`, the map will not respond to interaction.  This is a static map built with the full web map rendering API. */
   interactive?: boolean
   containerstyle?: string
+  reviews?: CollectionEntry<"reviews">[]
 }
 
-const { latitude, longitude, zoom, mapstyle, container, interactive, containerstyle = "height: 61.8vh"} = Astro.props
+const { latitude, longitude, zoom, mapstyle, container, interactive, containerstyle = "height: 61.8vh", reviews = [] } = Astro.props
+
+// Pre-render all review content
+const renderedReviews = await Promise.all(
+  reviews.map(async (review) => {
+    const { Content } = await review.render();
+    return {
+      ...review.data,
+      slug: review.slug,
+      Content,
+      emoji: cuisineEmojis[review.data.cuisine?.toLowerCase() || 'default']
+    };
+  })
+);
 
 ---
 
-<maplibre-map
-  data-latitude={latitude}
-  data-longitude={longitude}
-  data-zoom={zoom}
-  data-mapstyle={mapstyle}
-  data-container={container}
-  data-interactive={interactive}
-  data-containerstyle={containerstyle}
->
-<div id={container} style={containerstyle}></div>
+<div class="w-full flex justify-center">
+  <div class="w-[90vw] max-w-6xl">
+    <div id={container} class="w-full rounded-lg shadow-lg overflow-hidden" style={`width: 100%; ${containerstyle}`}></div>
+  </div>
+</div>
+
+<div id="review-content" class="mt-8 max-w-6xl mx-auto px-4"></div>
+
+{renderedReviews.map((review) => (
+  <div id={`review-${review.slug}`} class="hidden">
+    <ReviewLayout
+      title={review.title}
+      description={review.description}
+      pubDate={review.pubDate}
+    >
+      <review.Content />
+    </ReviewLayout>
+  </div>
+))}
 
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
-{
-  /* Astro specific way to pull in MapLibre, `is:inline`:  https://docs.astro.build/en/reference/directives-reference/#isinline */
-}
 <script is:inline src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
-<script>
-  class MapLibreMap extends HTMLElement {
-    constructor() {
-      super()
+<script define:vars={{ latitude, longitude, zoom, mapstyle, container, interactive, renderedReviews }}>
+  // Create custom marker icon
+  const createMarkerIcon = (emoji) => {
+    const markerIcon = document.createElement('div');
+    markerIcon.style.width = '40px';
+    markerIcon.style.height = '40px';
+    markerIcon.style.fontSize = '32px';
+    markerIcon.style.textAlign = 'center';
+    markerIcon.style.lineHeight = '40px';
+    markerIcon.style.cursor = 'pointer';
+    markerIcon.textContent = emoji;
+    return markerIcon;
+  };
 
-      var map = new maplibregl.Map({
-        container: this.dataset.container,
-        interactive: JSON.parse(this.dataset.interactive),
-        center: [this.dataset.longitude, this.dataset.latitude],
-        zoom: this.dataset.zoom,
-        style: this.dataset.mapstyle
-      })
-      var trainStationIcon = document.createElement('div');
-      trainStationIcon.style.width = '38px';
-      trainStationIcon.style.height = '55px';
-      // Explicitly set scaleFactor=2 in the call 
-      // and backgroundSize=contain to get better 
-      // Marker Icon quality with MapLibre GL
-      trainStationIcon.style.backgroundSize = "contain";
-      trainStationIcon.style.backgroundImage = "url(https://api.geoapify.com/v1/icon/?type=awesome&scaleFactor=2&color=%23e68d6f&size=large&icon=train&iconSize=large&apiKey=6dc7fb95a3b246cfa0f3bcef5ce9ed9a)";
-      trainStationIcon.style.cursor = "pointer";
-      var marker = new maplibregl.Marker().setLngLat([40.74708936598859, -73.9454124504279]).addTo(map);
+  // Wait for both the DOM and the MapLibre script to be loaded
+  function initializeMap() {
+    if (typeof maplibregl === 'undefined') {
+      setTimeout(initializeMap, 100);
+      return;
     }
+
+    const map = new maplibregl.Map({
+      container: container,
+      interactive: interactive,
+      center: [longitude, latitude],
+      zoom: zoom,
+      style: mapstyle
+    });
+
+    // Add navigation controls
+    map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+    map.on('load', () => {
+      // Add markers for each review
+      renderedReviews.forEach(review => {
+        const marker = new maplibregl.Marker({
+          element: createMarkerIcon(review.emoji)
+        })
+          .setLngLat([review.longitude, review.latitude])
+          .addTo(map);
+
+        // Add click handler to show review content
+        marker.getElement().addEventListener('click', () => {
+          const reviewContent = document.getElementById('review-content');
+          const reviewElement = document.getElementById(`review-${review.slug}`);
+          if (reviewContent && reviewElement) {
+            // Clear previous content
+            reviewContent.innerHTML = '';
+            // Clone and show the review content
+            const clone = reviewElement.cloneNode(true);
+            clone.classList.remove('hidden');
+            reviewContent.appendChild(clone);
+            // Re-initialize MathJax if it exists
+            if (window.MathJax) {
+              window.MathJax.typeset();
+            }
+          }
+        });
+      });
+    });
   }
 
-  window.customElements.define("maplibre-map", MapLibreMap);
+  // Start initialization
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMap);
+  } else {
+    initializeMap();
+  }
 </script>

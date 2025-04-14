@@ -62,12 +62,12 @@ A concrete example would be conversion from a **daily** Sharpe Ratio to an **ann
 ### Application I: Loss Probabilities
 Recall Cantelli's Inequality:
 $$
-P(X < \mu-\lambda) \leq \frac{\sigma^2}{\sigma^2 + \lambda^2}
+\mathbb{P}(X < \mu-\lambda) \leq \frac{\sigma^2}{\sigma^2 + \lambda^2}
 $$
 Let $X$ be the annualized return of a strategy and $\text{SR}$ be the annualized Sharpe Ratio. We want to find out the probability of losses in multiples of the standard deviation $L\sigma$ where $L$ is a scaling factor. We can then get:
 $$
 \begin{split}
-P(X<-L\sigma) &= \frac{\sigma^2}{\sigma^2 + (L\sigma+\mu)^2} \\
+\mathbb{P}(X<-L\sigma) &= \frac{\sigma^2}{\sigma^2 + (L\sigma+\mu)^2} \\
 &=\frac{1}{1+(L+\text{SR})^2}
 \end{split}
 $$
@@ -88,4 +88,11 @@ Solving for the stationary points, we get
 $$
 \mathbf{w}^* = \frac{\Omega_r^{-1}\mathbf{b}}{\mathbf{b}^T\Omega_r^{-1}\mathbf{b}}
 $$
-To get the optimal 
+To get the allocation that would result in the portfolio with the best achievable Sharpe Ratio, we simply need to choose $\mathbf{b}$ such that
+$$
+\begin{split}
+\mathbf{b} &= \mathbb{E}[\mathbf{r}] \\
+\text{SR}_r &= \frac{\mathbb{E}[\mathbf{r}]^T\mathbf{w}}{\sqrt{\mathbf{w}^T\Omega_r \mathbf{w}}} = \frac{1}{\sqrt{\mathbf{w}^T\Omega_r \mathbf{w}}}
+\end{split}
+$$
+Therefore achieving the maximum Sharpe Ratio.
