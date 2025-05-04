@@ -3,8 +3,8 @@ title: "Morning Brunch & Cafe"
 description: "A slice of Kowloon Tong"
 pubDate: 2025-05-04
 cuisine: "chinese"
-longitude: -73.93928917993212
-latitude: 40.750430123162786
+longitude: -73.94013553958656
+latitude: 40.74921486270226
 ---
 In a different life, I was a student in Hong Kong and relied on a daily intake of carb-based Hong Kong style breakfast to get me out of bed. Hong Kong cuisine at its core is a dance with pragmaticism, where modular, highly customizeable components are mixed and matched to your liking. (The modern bowl restaurants - Chipotle, Sweetgreen, NAYA may have borrowed a thing or two) You typically start with a choice of carbs - rice or noodles, and add on top it various protein pairings depending on the time of the day - spam, scrabled eggs, roasted pork, roasted duck - you name it. Think the rice's a little under seasoned? No worries, we'll just pour some of that meat juice over, no need to bother with an extra sauce. Need some veggie? Depending on whether you are posh or not, a side order of steamed vegatables for an upcharge or just basic water-boiled cabbage will do. The entire system is designed around delivering (somewhat) balanced nutrients into your stomach in the most efficient, consistent and streamlined manner possible. 
 
