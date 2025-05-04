@@ -1,6 +1,6 @@
 export const cuisineEmojis: Record<string, string> = {
   italian: "🍝",
-  chinese: "🥡",
+  chinese: "🥟",
   japanese: "🍱",
   korean: "🍜",
   thai: "🍛",

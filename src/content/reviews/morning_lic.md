@@ -1,0 +1,16 @@
+---
+title: "Morning Brunch & Cafe"
+description: "A slice of Kowloon Tong"
+pubDate: 2025-05-04
+cuisine: "chinese"
+longitude: -73.93928917993212
+latitude: 40.750430123162786
+---
+In a different life, I was a student in Hong Kong and relied on a daily intake of carb-based Hong Kong style breakfast to get me out of bed. Hong Kong cuisine at its core is a dance with pragmaticism, where modular, highly customizeable components are mixed and matched to your liking. (The modern bowl restaurants - Chipotle, Sweetgreen, NAYA may have borrowed a thing or two) You typically start with a choice of carbs - rice or noodles, and add on top it various protein pairings depending on the time of the day - spam, scrabled eggs, roasted pork, roasted duck - you name it. Think the rice's a little under seasoned? No worries, we'll just pour some of that meat juice over, no need to bother with an extra sauce. Need some veggie? Depending on whether you are posh or not, a side order of steamed vegatables for an upcharge or just basic water-boiled cabbage will do. The entire system is designed around delivering (somewhat) balanced nutrients into your stomach in the most efficient, consistent and streamlined manner possible. 
+
+You can imagine then the elation when I stumbled upon this cute little breakfast shop near my apartment in LIC. The community really seems to be growing businesses out of thin air on a daily basis, and with the new Asian food court slated to open doors in June (we'll see about that), I find myself fewer reasons to make the 40-minute trip to Flushing. *Morning* boasts an eclectic menu of classic Hong Kong breakfast items, including many that I'm yet find elsewhere in the city. I had their macaroni soup twice over, a delicious sacrilege against the Italians I'd happily commit every morning. The dish typically places boiled macaroni in a clear broth, often adding a slice of spam or fried eggs on top. *Morning* does a slightly more gourmet version of that by replacing the clear broth with this rich, reduced tomato base infused with thyme, and a good portion of sizzling beef strips on top. A near perfect flavor profile, with a tendency of being overly sweet.
+
+The shop unfortunately bundles the Hong Kong staple with what I can only imagine to be some of the lesser popular items. The macaroni soup, for example, came with a pork-floss bagel binded together by condensed milk. I couldn't possibly fathom a clientele that walks into a Hong Kong breakfast shop and decides a store-bought bagel with processed meat is the most appealing item on the menu, when they could have a freshly baked one literally steps across the street. Perhaps these were included to attract customers who might not have context for Hong Kong cuisine, then again, I don't think they'll be too happy with what they get expecting a bagel. In my humble opinion, the owners could probably do away with some of these lacklaster attempts at a fusion cuisine and focus on delivering the hearty, classic Hong Kong staples that drew people into the store in the first place.
+
+### Overall Rating
+3.5 / 5
