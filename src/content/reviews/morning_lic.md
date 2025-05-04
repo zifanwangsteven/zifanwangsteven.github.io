@@ -1,6 +1,6 @@
 ---
 title: "Morning Brunch & Cafe"
-description: "A slice of Kowloon Tong"
+description: "27-20 42nd Rd, Long Island City"
 pubDate: 2025-05-04
 cuisine: "chinese"
 longitude: -73.94013553958656
