@@ -2,7 +2,7 @@
 title: "Loggers Loggers Loggers"
 description: ""
 pubDate: "July 7 2025"
-heroImage: "/low_steps.png"
+heroImage: "/logger.jpg"
 tags: ["dev-peripheral"]
 ---
 The amount of time I spent tweaking various logging-tangencial issues in python is obscene. Good thing I came across this [blog](https://www.dash0.com/guides/logging-in-python) while randomly scrolling through StackOverFlow at work, there's still hope in humanity after all. The following is a brief rundown of the key ideas from the blog, if you have the time, please go ahead and read the original post instead.
@@ -67,3 +67,8 @@ logger.addHandler(handler)
 logger.info("GET /api request succeeded") # allowed
 logger.info("GET /health request succeeded") # dropped
 ```
+
+### Rich Loggers
+Completely unnecessary, as modern day log ingestion platforms such as grafana would much prefer JSON-based logging, but once in a while, when you do run some local optimization problems, a human-readable logger format could be useful. To this end, I found the [rich](https://rich.readthedocs.io/en/latest/logging.html) package extremely easy to use and produces some dazzling log messages with minimal setups necessary. Not much to say there - except one thing - I typically like to have my default log config to `ERROR` level and configure to specific levels if needed in runtime. This would require a little extra finagling in a multi-threaded environment, make use of the `initializer` arg to set up your leveling in a `ThreadPoolExecutor`.
+
+*The gentleman on the thumbnail shares his name with the aforementioned logging class - RichHandler, and as of this post, is still serving as the CEO of Jefferies Group.*
