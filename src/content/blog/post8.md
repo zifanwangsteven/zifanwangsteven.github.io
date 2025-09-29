@@ -32,7 +32,9 @@ One natural question that arises is why would we create 2 separate metrics for s
 Suppose we build 2 separate models, one for each task, with respective cross-entropy scores 2.5 and 4.5. Which model is better? It would be ambivalent because the base-entropy, or the relative uncertainty of the task (or can be understood as the difficulty of the task are different) are not clear. Suppose we are then given the information that the base entropy for $P, Q$ is respectively $2, 4.2$, then subtracting these from the cross-entropies, we get KL-divergences of $0.5, 0.3$, indicating model 2 is a better approximation of the best possible model. In machine learning, we are typically fixing a task $P$ as constant and optimizing model $Q$ only, in these cases, a loss function built with cross-entropy or KL-Divergence are often equivalent.
 ### A Note on Distance
 One caveat on cross-entropy and KL-Divergence is that there are **NOT** distance metrics i.e. not symmetric. $\text{KL}(P || Q) \neq \text{KL}(Q||P)$ - the choice of which metric to use depends on **whose probability distribution** we want to weight the loss by. A concrete example would be the loss function for RLHF (Reinforcement Learning from Human Feedback) policy model,
-$$L = -\mathbb{E}[r(x,y)] + \beta D_\text{KL}(\pi_{\theta} || \pi_{\text{ref}})$$
+$$
+L = -\mathbb{E}[r(x,y)] + \beta D_\text{KL}(\pi_{\theta} || \pi_{\text{ref}})
+$$
 In human terms, we would like to maximize reward obtained from policy $\pi_{\theta}$, while deviating as little as possible from a reference policy $\pi_{\text{ref}}$. Why do we do $D_\text{KL}(\pi_{\theta} || \pi_{\text{ref}})$ instead of $D_\text{KL}(\pi_{\text{ref}} || \pi_{\theta})$? Since we want to penalize more frequent actions from $\pi_{\theta}$ that deviate from the reference distribution and not the other way around.
 ### In Language Modeling
 In language modeling, we typically model the loss of a model as the cross-entropy between the true next word distribution and model next word distribution, since the actual next word distribution is **deterministic** (we know ahead of time exactly what each word in a sentence is), its distribution will just be a delta function with prob of 1 at the actual word and 0 everywhere else, so the cross-entropy loss at word $i$ simply becomes
@@ -40,5 +42,7 @@ $$
 -\log (p_i | p_{<i}) = -\log(\text{softmax}(o_i)[x_{i+1}]) = -\log(\frac{\exp(o_i[x_{i+1}])}{\sum_{a=1}^{\text{vocab}}\exp (o_i[a])})
 $$
 For a loss function we can simply take the average over the entire length of the sentence and batch. We reporting model evaluation, we typically report another number **perplexity**, which is nothing but the exponential of the cross entropy loss.
-$$\text{perplexity} = \exp (-\frac{1}{N}\sum_i^N(\log(p_i|p_{<i})))$$
+$$
+\text{perplexity} = \exp (-\frac{1}{N}\sum_i^N(\log(p_i|p_{<i})))
+$$
 This intuitively introduces a concept of "effective vocab size", which tells us, on average when making a next-word prediction, what is the equivalent vocab size if the modern were to uniformly sample from it?
