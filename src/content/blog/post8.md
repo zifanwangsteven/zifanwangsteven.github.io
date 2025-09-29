@@ -45,4 +45,4 @@ For a loss function we can simply take the average over the entire length of the
 $$
 \text{perplexity} = \exp (-\frac{1}{N}\sum_i^N(\log(p_i|p_{<i})))
 $$
-This intuitively introduces a concept of "effective vocab size", which tells us, on average when making a next-word prediction, what is the equivalent vocab size if the modern were to uniformly sample from it?
+This intuitively introduces a concept of "effective vocab size", which tells us, on average when making a next-word prediction, what is the equivalent vocab size if the model were to uniformly sample from it?
