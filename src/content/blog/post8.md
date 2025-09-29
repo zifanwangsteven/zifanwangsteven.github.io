@@ -2,8 +2,8 @@
 title: "Entropy, Cross-Entropy & KL Divergence"
 description: "Some closely related topics I constantly confuse up in language modeling"
 pubDate: "Sep 28 2025"
-heroImage: "/itemPreview.webp"
-tags: ["portfolio optimization"]
+heroImage: "/kl_div.webp"
+tags: ["ML"]
 ---
 ### Basics
 **Entropy** is a simple measurement of **uncertainty** in a probability distribution. For a probablity distribution A it takes the form of 
