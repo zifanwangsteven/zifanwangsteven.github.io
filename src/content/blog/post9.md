@@ -60,3 +60,40 @@ One can thus identify an extreme value in $x$ as
 
 $$h_{ii} \ge 3 \bar{h} = 3 \frac{p}{n}$$
 
+## Chapter 9 
+### Bayesian Regression with `bambi` and `pymc`
+
+After performing a bayesian regression with `bambi` (underlying pymc) there are a couple values of interest
+
+```python
+model = bmb.Model(“weight ~ height“, data=earnings)
+idata = model.fit(draws=2000, chainis=4) # inference data by arviz
+```
+
+- the *point prediction* $\hat{a} + \hat{b} x^{new}$
+    - just use the mean params + new data point
+        
+- the *linear predictor with uncertainty* $a + bx^{new}$ propagating the inferential uncertainty in (a, b) - this represents the expected / average value of y for new data points with predictors $x^{new}$
+    - sample from `model.predict(idata=idata, kind=”response_params”, inplace=False)`
+    - data in `new_predictions.posterior.mu`
+    - as $n \to \infty$ , the standard deviation approaches $0$.
+        
+- the *predictive distribution for a new observation* $a + bx^{new} + \epsilon$ - this represents uncertainty about a new observation $y$ with predictors $x^{new}$
+    
+    - sample from `model.predict(idata=idata, kind=”response”, inplace=False)`
+    - data in `new_predictions.posterior_predictive`
+    - as $n \to \infty$, the standard deviation approaches $\hat{\sigma}$
+
+
+### Uniform, weakly informative and informative priors in regression
+When the available data are strong relative to other readily available information, we typically don't concern ourselves with choosing a prior explicitly. 
+
+* Uniform / flat often called *noninformative*. With a flat prior the maximum likelihood estimate is also the mode of the posterior distribution. You can do 
+
+```python
+import bambi as bmb
+
+bmb.Model(..., prior=bmb.Prior("flat"))
+```
+
+* default prior distribution - weakly informative family of prior distribution. For a model of the form $y = a + b_1x_1 + b_2x_2 + .. + \epsilon$, each coefficient $b_i \sim N(0, 2.5\frac{\sigma_y}{\sigma_x})$ and intercept $a \sim N(\bar{y}, \sigma_y)$ and $\sigma \sim \text{HalfNormal}(\sigma_y)$.
