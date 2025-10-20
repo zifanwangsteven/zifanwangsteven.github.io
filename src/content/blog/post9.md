@@ -97,3 +97,58 @@ bmb.Model(..., prior=bmb.Prior("flat"))
 ```
 
 * default prior distribution - weakly informative family of prior distribution. For a model of the form $y = a + b_1x_1 + b_2x_2 + .. + \epsilon$, each coefficient $b_i \sim N(0, 2.5\frac{\sigma_y}{\sigma_x})$ and intercept $a \sim N(\bar{y}, \sigma_y)$ and $\sigma \sim \text{HalfNormal}(\sigma_y)$.
+
+## Chapter 10
+
+### Ways of Interpreting Multiple Linear Regression
+* *predictive interpretation* considers how the outcome variable differs on average, when comparing two groups of items that differ by 1 in the relevant predictor while being identical in all the other predictors. Under the linear model, the coefficient is the expected difference in y between these two items.
+* *counterfactual interpretation* is expressed in terms of changes within individuals, rather than comparisons between individuals. Here, the coefficient is the expected change in y caused by adding 1 to the relevant predictor, while leaving all others the same. (this interpretation is useful for casual inferences)
+
+### Interaction Terms
+For example, a regression regressing child's IQ on mother's IQ and high school graduation status can have an interaction term that captures the difference in slope when a mother finishes and not finishes high school. One key indicator of potential existance of interaction terms if large coefficients for uninteracted terms.
+
+### Indicator Variables
+The usual spiele with perfect multicolinearity, i.e. when you have an intercept variable and $k$ binary dummy variables for each of the $k$ categories, the model can't assign weight to the baseline model (there are infinite ways to arrive at the same baseline result). So either drop the intercept or do $k-1$ indicators. The interpretation for the latter is that whichever indicator is left out would be the baseline model. 
+
+### Some Notations
+For a classical linear regression model
+
+$$y_i = \beta_1X_{i1} + \beta_2X_{i2} + ... + \beta_{k}X_{ik} + \epsilon_i$$
+
+where the errors $\epsilon_i$ have **independent normal distributions with mean 0 and standard deviation** $\sigma$. We can express this using a compact notation
+
+$$\mathbb{y} \sim N(X\mathbb{\beta}, I\sigma^2)$$
+
+Where $\mathbb{y} \in \mathbb{R}^{n \times 1}, X \in \mathbb{R}^{n \times k}, \beta \in \mathbb{R}^{k \times 1}$. We are well familiar with the OLS solution $\hat{\beta} = (X^TX)^{-1}X^Ty$. The estimate of the residual standard deviation is 
+
+$$\hat{\sigma} = \sqrt{\frac{\text{RSS}}{n-k}}$$
+
+Then from this we can also get variance-covariance matrix of each individual estimator
+
+$$Var(\hat{\beta}) = \hat{\sigma}^2(X^TX)^{-1}$$
+
+Where the square root of the diagonal elements are the standard errors for each predictor estimation (what is shown in the summary stats of a statsmodel fitted result). Now when  predicting for a new observation $\mathbb{x_i}$ using the fitted model, note now there's 2 source of variance for a new observation, i.e.:
+
+* the estimation error, errors associated with the uncertainty around the regression coefficients, $\hat{\sigma}\sqrt{x_i^T(X^TX)^{-1}x_i}$ - in `get_prediction`, this corresponds to `se_mean`
+* residual error, errors that are inherent with the data generating process, $\hat{\sigma}$ - corresponds to square root of `model.scale`
+
+And so the standard error of the predicted value would be $\hat{\sigma}\sqrt{1 + x_i^T(X^TX)^{-1}x_i}$, accessible via `se_obs` from `get_prediction`.
+
+### Nonidentifiable Parameters
+In maximum likelihood, parameters are nonidentified if they can be changed without altering the likelihood. A model is said to be nonidentifiable if it contains parameters that can cannot be estimated uniquely. (or standard errors of near infinity). A typical cause if colinearity or near colinearity.
+
+### Weighted Regressions
+
+$$\hat{\beta} = (X^TW^{-1}X)^{-1}X^TW^{-1}y$$
+
+Where $W$ is the matrix of weights. It follows that the standard error of the estimated coefficients are
+
+$$Var(\hat{\beta}) = \hat{\sigma}^2(X^TW^{-1}X)^{-1}$$
+
+In the case of heteroskescidicity where we are weighting by the inverse of the residual covariance matrix $\Omega_{\epsilon}^{-1}$, $\hat{\sigma}^2$ is just 1 since we standardized the inputs already.
+
+Weighted regressions can be derived from a variety of models,
+
+* using observed data to represent a larger population. For example, suppose out data come from a survey that oversamples older white women, and we are interested in estimating the population regression. Then we would assign to survery respondent a weight that is proprotional to the number of people of that type in the population.
+* duplicate observations. 
+* unequal variances - heteroskedescity.
