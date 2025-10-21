@@ -152,3 +152,25 @@ Weighted regressions can be derived from a variety of models,
 * using observed data to represent a larger population. For example, suppose out data come from a survey that oversamples older white women, and we are interested in estimating the population regression. Then we would assign to survery respondent a weight that is proprotional to the number of people of that type in the population.
 * duplicate observations. 
 * unequal variances - heteroskedescity.
+
+## Chapter 11
+### Assumptions of Linear Regression
+* Linearity and Additivity: $y = \beta_0 + \beta_1 x_1 +... + \beta_k x_k$
+* Independence of errors: observations should be independent of each other $\text{Cov}(\epsilon_i, \epsilon_j) = 0$ if $i \neq j$. This assumption is often violated in time series, spatial, and multi-level settings. One can use the [Durbin-Watson Statistic](https://en.wikipedia.org/wiki/Durbin%E2%80%93Watson_statistic) to check for autocorrelation in the residuals.
+* Equal variance of errors (Homoskedasticity). $\text{Var}(\epsilon_i) = \sigma^2$ for all $i$. One can use a residual plot (residuals plotted against predicted values), and if you see a funnel shape, then it is problematic. This does not impact the betas, but only there standard errors. Possible remedies, use robust covariance estimators (HC3s) or WLS (like introduced in previous chapter). Most of the time not a huge issue tho.
+* No perfect multicollinearity. Use VIF test (variance inflation factors). You should remove the highly correlated predictors or use regularized regression (Lasso / Ridge).
+* Exogeneity $X$ should be *exogenous* to $Y$, meaning the predictor should be decided outside the system, and is not influenced by $Y$ (reverse causality) or anything that also affects $Y$ (omitted variable bias). $\mathbb{E}(\epsilon | X) = 0$. OLS can be inconsistent and biased and no true causal effect.
+* Normality of errors. Typically examine with a Q-Q plot. - inaccurate inference.
+
+### R Squared
+$R^2 = 1 - \frac{RSS}{TSS} \in [0, 1]$ measures relatively predictive power from just predicting the main. Or "explained variance", how much of the variance in the observed variable is captured by the model. This is defined for a typical least-squared based point estimate. But for a bayesian model with a strong prior, the above formula may go out of bounds. We can however, define an alternative metric:
+
+$$R^2* = \frac{\text{var}_{\text{fit}}}{\text{var}_{\text{fit}} + \text{var}_{\text{res}}}$$
+
+Where $\text{var}_{\text{fit}}$ is the variance of the predictored values $Var(\hat{y_i})$, and $\text{var}_{\text{res}}$ is the residual variance $\sigma^2$.
+
+### A note on AICs
+$\text{AIC} = 2k-2\log L(y|X,\beta)$ Penalized no of parameters to prevent overfitting, genenerally prefer a model with a smaller AIC all else equal.
+
+### A note on coverage
+To evaluate the effectiveness of a confidence interval estimate with a simulation-based approach. We can repeat the experiment (the data generating process + regression fit) for $n$ times and observe the amount of times the true parameters fall within the confidence interval. For example for +- 1 se, we expect the true value to fall within the confidence interval ~68% of the times. If normality of errors asumption is not met, we'll see an deterioration of the confidence interval, as we are undersestimating the heavy tails of the standard errors - thus obtaining a narrower than usual confidence interval.
