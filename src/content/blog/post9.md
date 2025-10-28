@@ -174,3 +174,25 @@ $\text{AIC} = 2k-2\log L(y|X,\beta)$ Penalized no of parameters to prevent overf
 
 ### A note on coverage
 To evaluate the effectiveness of a confidence interval estimate with a simulation-based approach. We can repeat the experiment (the data generating process + regression fit) for $n$ times and observe the amount of times the true parameters fall within the confidence interval. For example for +- 1 se, we expect the true value to fall within the confidence interval ~68% of the times. If normality of errors asumption is not met, we'll see an deterioration of the confidence interval, as we are undersestimating the heavy tails of the standard errors - thus obtaining a narrower than usual confidence interval.
+
+## Chapter 12
+
+### Linear Transformations
+Linear scaling / transformation of predictors / regression coefficients (unsurprisingly) don't change the predictive power of the regression model, but might lead to more interpretable regression results. For example the intercept of a raw regression for children's IQ value of mother's IQ may not be super useful, as it is the predicted IQ had the mother had an IQ of 0. If however, we center the mother IQ predictor at its mean, the intercept gives a much more intuitive interpretation of the average IQ of children when their mother is at the average IQ level. We can take this one step further and use zscores as predictors, standardizing further by normalizing the predictor's standard deviation. We should use an **externally** determined distribution when the sample size is small.
+
+### Correlation as the Regression Parameter
+If both the target and the predictors are standardized to have mean 0 and std 1, then the regression parameter $b$ for $y \sim a + bx$ would simply be,
+
+$$b = \frac{\sigma_y}{\sigma_x}\rho_{xy}$$
+
+In this particular case since both $\sigma_y$ and $\sigma_x$ are 1, the regression parameter is simply the correlation between the 2. This also tells us that in general, if the regression parameter has an absolute value of greater than 1, the variation in $y$ must be greater than that in $x$.
+
+### Logarithmic Transformations
+The logarithmic transformations takes a linear model into a multiplicative model. Log-log transformations define percentage change relationships. (Also called elasticity). Which goes like, for an $w\%$ change in $x$, what is the average $\%$ change in $y$? For a continuous function $f$ this is defined as
+
+$$Q = \frac{d\log f}{d\log x} = \frac{x}{f}\frac{df}{dx}$$
+
+### General Principles
+* include all input variables, that for subtantive reasons, might be expected to be important in predicting the outcome.
+* can combine multiple predictors to get a total score
+* for inputs that have large effects, consider interaction terms.
