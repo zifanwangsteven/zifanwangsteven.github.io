@@ -196,3 +196,61 @@ $$Q = \frac{d\log f}{d\log x} = \frac{x}{f}\frac{df}{dx}$$
 * include all input variables, that for subtantive reasons, might be expected to be important in predicting the outcome.
 * can combine multiple predictors to get a total score
 * for inputs that have large effects, consider interaction terms.
+
+## Chapter 13
+
+### Logistic Functions and Sigmoid
+The logistic function is 
+
+$$\text{logit}(x) =\log\frac{x}{1-x}$$
+
+where $x \in (0, 1)$, $\text{logit}(x) \in (-\infty, \infty)$. Here $x$ is understood as the probability of an event, then $\frac{x}{1-x}$ is the odds of such event, and the log odds is called the logit.
+
+The inverse of this function would be the famed sigmoid function:
+
+$$\text{logit}^{-1}(x) = \text{sigmoid}(x) = \frac{e^x}{1+e^x}$$
+
+Here $x\in(-\infty, \infty)$, $\text{sigmoid(x)} \in (0, 1)$. Now sigmoid function is monotonically increasing and bounded between $(0, 1)$, therefore it is also a CDF function for what is called the **logistic distribution**. Taking the simple derivative of the above PDF of the standard logistic disitribution:
+
+$$p(x) = \frac{e^{-x}}{(1+e^{-x})^2}$$
+
+More generally, we allow for a location $\mu$ and a scale $s$ parameter, where 
+
+$$\text{sigmoid}(x; \mu, s) = \frac{1}{1 + e^{-\frac{x-\mu}{s}}}$$
+
+### Logistic Regression
+In logistic regression, we are predicting for the probabity of a binary outcome,
+
+$$P(y_i = 1) = \text{logit}^{-1}(X_i\beta)$$
+
+The logistic curve is the steepest at its center. For a simple regression of $\text{logit}^{-1}(x) = \alpha + \beta x$ at $x=0$ the slope becomes $\frac{\beta}{4}$ which is the maximum difference in $P(y=1)$ for a unit change in $\beta$. When the predicted probabilities are not far from $0.5$, $\beta/4$ is a good top line estimate.
+
+### Interpretations of Logistic Regression
+We can interpret logistic regression as a nonlinear modeling of latent (unobserved) continuous variables variables.
+
+$$
+y_i = \begin{cases} 
+1 & \text{if} & z_i > 0 \\
+0 & \text{if} & z_i < 0
+\end{cases} \\
+z_i = X_i\beta + \epsilon_i
+$$
+
+Where $\epsilon_i \sim \text{Logistic}(0, 1)$. The logistic regression is also Bell-shaped and can be approximated by a Normal with $N(0, 1.6^2)$. Why not let $\sigma$ be a free variable and estimate it jointly with $\beta$? Well the problem is, the binary data we have on the response variable **does not** identify a scale parameter **uniquely**.
+
+$$
+z_1 = X\beta + \epsilon\\
+z_2 = X(10 \beta) + (10 \epsilon)
+$$
+
+The sign of $z_1$ and $z_2$ are the same, and thesefore have the same implications for the set of binary observations. We solve this by fixing the scale variable to 1 and solving only for $\beta$. This corresponds to roughly $\sigma = 1.6$ for a normal approximation.
+
+### MLE
+For logistic regressions, we have no close form solutions available, so typically start with MLE, and add regularization / bayesian prior as needed. The likelihood is 
+
+$$
+L(y; \beta, X) = \prod_i (\text{logit}^{-1}(X_i\beta)^{y_i}(1-\text{logit}^{-1}(X_i\beta))^{1-y_i})
+$$
+
+* Running a logstic regression with a single intercept is equivalent to computing the proportion of an event.
+* Running a logistic regression with a single predictor (without intercept) is equivalent to comparing proportions in two populations.
