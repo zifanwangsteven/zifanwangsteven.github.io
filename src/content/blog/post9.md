@@ -254,3 +254,17 @@ $$
 
 * Running a logstic regression with a single intercept is equivalent to computing the proportion of an event.
 * Running a logistic regression with a single predictor (without intercept) is equivalent to comparing proportions in two populations.
+
+## Chapter 14
+
+Graphing residual plots for binary responses are particularly helpful most of the time, one remedy is to graph average residuals bucketed by predictors.
+
+Average predictive comparisons on the probability scale are more useful than the direct comparisons of parameters, it is important to use the actual expected difference in probability than the difference in probability evaluated at the mid-point of all other predictors.
+
+$$\delta = \frac{\mathbb{E}[y|u^{hi}, v] - \mathbb{E}[y|u^{lo}, v]}{u^{hi}-u^{lo}}$$
+
+When there is **separation** - i.e. the targets are perfectly separated by a set of predictors, the regression coefficients will approach positive / negative infinity - such that only the sign of the predictor matters, and not the value. We can mitigate this by using a stronger prior in our inference.
+
+## Chapter 15
+
+### Definition and Framework
