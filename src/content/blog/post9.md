@@ -268,3 +268,37 @@ When there is **separation** - i.e. the targets are perfectly separated by a set
 ## Chapter 15
 
 ### Definition and Framework
+A framework for statistical analysis that includes linear and logistic regression and special cases. It involves:
+* a vector of outcome data $y = (y_1, ..., y_n)$
+* a matrix of predictors $X$ and a vector of coefficients $\beta$, forming a linear predictor vector $X\beta$.
+* A *link function* $g$, yielding a vector of transformed data $\hat{y}$ = $g^{-1}(X\beta)$ that are used to model the data
+* a data distribution $p(y|\hat{y})$
+* possibly other parameters, such as variances, overdispersions and cutpoints, involved in the predictors, link function and data distribution.
+
+The options in a generalized linear model are the transformations $g$ and the distribution $p$.
+
+* for linear regression $g(u) = u$, $p(y|\hat{y}) = N(X\beta, \sigma^2)$
+* for logistic regression $g^{-1}(u) = \text{logit}^{-1}(u)$, $p(y|\hat{y}) = \hat{y}$ (since here $\hat{y}$ is simply the probabilty of a positive sample)
+* Poisson and negative binomial models - each data point $y_i$ can equal $0, 1, 2 ...$, here $g(u) = \exp(u)$
+* logistic-binomial model - same as logistic, but each instance contains multiple trails and is therefore a binomial data distribution.
+* probit models - same as logistic regression but with the logit function replaced by the normal cumulative distribution, or equivalently with the normal distribution instead of logistic in the latent-data errors.
+* multinomial logit and probit models - extensions of logistic and probit regressions for categorical data with more than two options, for example survery responses such as Strongly Agree.... (ordered) or Straberry, Vanilla (unordered).
+* robust regression models - replace the usual normal or logistic models by other distributions.
+
+### Poisson and negative binomial regression
+In count-data regressions, each unit $i$ corresponds to a setting (spatial location or time period) in which $y_i$ events are observed. For example $y_i$ could be the number of traffic accidents at intersection $i$ in a given year.
+
+As with linear and logistic regression, the variation in $y$ can be explained with linear predictors $X$. The simplest model imaginable is the **Poisson Model**, 
+
+$$y_i \sim \text{Poisson}(e^{X_i\beta})$$
+
+The possion distribution has its own internal scale of distribution $\sqrt{E[y]}$, this may lead to the problem of **overdispersion / underdispersion**, i.e. the data show data show more or less variation than the fitted probability model.
+
+To generalize Poisson model to allow for overdispersion, we make use of the negative binomial model, which includes an additional "reciprical dispersion" parameter $phi$ so that $sd(x) = \sqrt{E[y] + E[y]^2/\phi}$ when $\phi \to \infty$, negative binomial becomes a poisson. Both binomial and poisson models have the natural applications in counting models, their key differences lie in for binomial models there is a natural limit -> can be interpreted as the number of successes out of $n_i$ trails. Whereas if each data point $y_i$ does not have a natural limit, then Poisson / Neg Bin should be preferred. When the limit is far from the mean tho, Poisson can be used to approximate binomial.
+
+Offsets - for counting models there is naturally a concept of *exposure*, the length of the measurement period, the length of the treatment applied extra. It wouldn't make sense for us to regress directly on the raw counts from these varying units of measurement, we instead measure the unit rate by dividing by the exposure $u$. The log of that exposure is called the offset of this regression. It is really not that different from the intercept, but only that instead of estimating an extra regression coef on it, we fix it to a constant coef of 1.
+
+$$
+\log\frac{\lambda_i}{u_i} = X_i\beta \\
+\lambda_i = u_i \exp(X_i\beta)
+$$
