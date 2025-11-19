@@ -267,7 +267,7 @@ When there is **separation** - i.e. the targets are perfectly separated by a set
 
 ## Chapter 15
 
-### Definition and Framework
+### GLM: Definition and Framework
 A framework for statistical analysis that includes linear and logistic regression and special cases. It involves:
 * a vector of outcome data $y = (y_1, ..., y_n)$
 * a matrix of predictors $X$ and a vector of coefficients $\beta$, forming a linear predictor vector $X\beta$.
@@ -302,3 +302,48 @@ $$
 \log\frac{\lambda_i}{u_i} = X_i\beta \\
 \lambda_i = u_i \exp(X_i\beta)
 $$
+
+### Logistic-Binomial Model
+Essentially an aggregation of simple logistic model, instead of modeling each binary outcome one by one, we group by predictor values and get $y_i$ successes out of $n_i$ trials in each step and repeat the experiment for $N$ times. We can easily model this with `statsmodels` as 
+
+```python
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+
+smf.glm("success + fail ~ X", data, family=sm.Binomial())
+```
+
+Like with Poisson distribution, the $\sigma$ in logistic / binomial distribution is preset to an arbitrary value of 1, and therefore we easily get a problem of overdispersion. We can verify this by computing the theoretical distribution of the residuals.
+
+$$
+z_i = \frac{z_i - n_i\hat{p_i}}{\sqrt{n_i \hat{p_i}(1-\hat{p_i})}}
+$$
+
+Where $\hat{p_i} = \text{logit}^{-1}({X_i\hat{\beta}})$. We can then formally compute the overdispersion parameter $\frac{1}{N-k}\sum_{i=1}^Nz_i^2$ and compare it with the $\chi^2_{N-k}$ distribution.
+
+### Probit Regression
+Similar to logistic regression, only the inverse logit function is replaced with a normal CDF $\Phi$. In the latent formulation,
+
+$$
+y_i=\begin{cases}
+1, \text{if} \quad z_i > 0\\
+0, \text{if} \quad z_i < 0
+\end{cases} \\
+z_i = X_i\beta + \epsilon_i\\
+\epsilon_i \sim N(0, 1)
+$$
+
+Here we fix the std param $\sigma=1$ following a similar rationale of nonidentifiability as in logistic regression.
+
+### Ordered and Unordered Categorial Regression
+Consider a categorial outcome $y$ that can take on values $1, 2, ... K$, we can express the outcome as a series of logistic regressions:
+
+$$
+P(y>1) = \text{logit}^{-1}(X\beta) \\ 
+P(y>2) = \text{logit}^{-1}(X\beta-c_2) \\ 
+... \\
+P(y>K-1) = \text{logit}^{-1}(X\beta-c_{K-1})
+$$
+
+These series of *cut points* $0 = c_1 < c_2 < c_3 < ... < c_{K-1}$. are constrained to increase as the probabilities are strictly decreasing. For a regression with $K$ categories, we need $K-2$ extra parameters in $c_K$ in addition to $\beta$.
+
